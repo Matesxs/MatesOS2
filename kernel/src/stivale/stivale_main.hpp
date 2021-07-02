@@ -10,5 +10,6 @@
 #include "stivale2.h"
 
 void *stivale2_get_tag(stivale2_struct *stivale2_struct, uint64_t id);
+void printBootloaderInfo(stivale2_struct *stivale2_struct);
 
 #endif //MATESOS2_STIVALE_MAIN_HPP

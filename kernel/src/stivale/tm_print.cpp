@@ -4,10 +4,21 @@
 
 #include "tm_print.hpp"
 #include "stddef.h"
+#include "stivale_tags_structure.hpp"
 
 void (*stivale2_print)(const char *buf, size_t size) = NULL;
 
 static const char CONVERSION_TABLE[] = "0123456789abcdef";
+
+void tm_init()
+{
+  stivale2_struct_tag_terminal *terminal_tag = getTags()->terminal_tag;
+  if (terminal_tag == NULL)
+    while (true) asm("hlt");
+
+  void *term_write_ptr = (void *)terminal_tag->term_write;
+  stivale2_print = (void(*)(const char*, size_t))(term_write_ptr);
+}
 
 void tm_putc(char c) {
   if (stivale2_print != NULL)

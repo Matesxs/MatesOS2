@@ -4,6 +4,7 @@ SECTIONS
 {
     . = 0xffffffff80200000;
 
+    _KernelStart = .;
     .stivale2hdr : {
         KEEP(*(.stivale2hdr))
     }
@@ -20,8 +21,11 @@ SECTIONS
         *(.data*)
     }
 
+    _WritableStart = .;
     .bss : {
         *(COMMON)
         *(.bss*)
     }
+    _WritableEnd = .;
+    _KernelEnd = .;
 }

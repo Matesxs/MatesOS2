@@ -7,9 +7,11 @@
 
 #include "stdarg.h"
 #include "stddef.h"
+#include "stivale2.h"
 
 extern void (*stivale2_print)(const char *buf, size_t size);
 
+void tm_init();
 void tm_putc(char c);
 void tm_print(const char *msg);
 void tm_puts(const char *msg);
