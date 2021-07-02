@@ -1,0 +1,6 @@
+limine/
+.idea/
+*.iso
+*.lock
+*.log
+.gradle/
