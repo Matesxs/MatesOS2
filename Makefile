@@ -48,7 +48,7 @@ $(OBJDIR):
 	@echo !======= Creating build object
 	@mkdir $(OBJDIR)
 
-.PHONY: debug clean
+.PHONY: debug clean $(ISO_IMAGE)
 
 all: $(ISO_IMAGE)
 
@@ -60,6 +60,8 @@ kernel: $(BUILDDIR)/kernel.elf
 limine:
 	git clone https://github.com/limine-bootloader/limine.git --branch=v2.4-binary --depth=1
 	$(MAKE) -C limine
+
+image: $(ISO_IMAGE)
 
 $(ISO_IMAGE): limine kernel
 	rm -rf iso_root
@@ -82,7 +84,7 @@ $(ISO_IMAGE): limine kernel
 
 	rm -rf iso_root
 
-run: $(ISO_IMAGE)
+run: image
 	qemu-system-x86_64 -M q35 -m 2G -cdrom $(ISO_IMAGE)
 
 clean:
