@@ -3,9 +3,8 @@
 //
 
 #include "setup.hpp"
-#include "lib/stmm.hpp"
 
 void pre_setup()
 {
-  memset(&_WritableStart, 0, (uint64_t)&_WritableEnd - (uint64_t)&_WritableStart);
+
 }

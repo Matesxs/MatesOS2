@@ -48,9 +48,13 @@ $(OBJDIR):
 	@echo !======= Creating build object
 	@mkdir $(OBJDIR)
 
-.PHONY: debug clean $(ISO_IMAGE)
+.PHONY: debug clean $(ISO_IMAGE) init
 
 all: $(ISO_IMAGE)
+
+init:
+	sudo apt-get install gcc nasm gdb
+	sudo apt-get install qemu qemu-system-common
 
 debug: CFLAGS += -g
 debug: clean kernel
