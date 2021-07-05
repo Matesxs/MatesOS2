@@ -2,7 +2,8 @@ ENTRY(_start)
 
 SECTIONS
 {
-    . = 0xffffffff80200000;
+    _virtual_base = 0xffffffff80000000;
+    . = _virtual_base + 2M;
 
     _KernelStart = .;
     .stivale2hdr : {

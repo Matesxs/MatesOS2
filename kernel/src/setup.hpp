@@ -7,8 +7,9 @@
 
 #include "stdint.h"
 
-void pre_setup();
+void setupMemory();
 
+extern uint64_t _virtual_base;
 extern uint64_t _KernelStart;
 extern uint64_t _KernelEnd;
 extern uint64_t _WritableStart;

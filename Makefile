@@ -48,7 +48,7 @@ $(OBJDIR):
 	@echo !======= Creating build object
 	@mkdir $(OBJDIR)
 
-.PHONY: debug clean $(ISO_IMAGE) init
+.PHONY: debug clean $(ISO_IMAGE) init clean_kernel
 
 all: $(ISO_IMAGE)
 
@@ -60,6 +60,8 @@ debug: CFLAGS += -g
 debug: clean kernel
 
 kernel: $(BUILDDIR)/kernel.elf
+
+rebuildkernel: clean_kernel kernel
 
 limine:
 	git clone https://github.com/limine-bootloader/limine.git --branch=v2.4-binary --depth=1
@@ -74,7 +76,7 @@ $(ISO_IMAGE): limine kernel
 	mkdir -p iso_root/boot
 	mkdir -p iso_root/static_data
 
-	cp limine.cfg limine/limine.sys limine/limine-cd.bin limine/limine-eltorito-efi.bin startup.nsh iso_root/
+	cp limine.cfg limine/limine.sys limine/limine-cd.bin limine/limine-eltorito-efi.bin iso_root/
 	cp static_data/bg.bmp iso_root/static_data/
 	cp $(BUILDDIR)/kernel.elf limine/BOOTX64.EFI iso_root/boot/
 
@@ -91,8 +93,10 @@ $(ISO_IMAGE): limine kernel
 run: image
 	qemu-system-x86_64 -M q35 -m 2G -cdrom $(ISO_IMAGE)
 
-clean:
+clean_kernel:
 	rm -rf $(BUILDDIR)
 	rm -rf $(OBJDIR)
+
+clean: clean_kernel
 	rm -rf limine
 	rm -rf $(ISO_IMAGE)

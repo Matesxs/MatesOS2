@@ -3,8 +3,15 @@
 //
 
 #include "setup.hpp"
+#include "memory/memory.hpp"
+#include "stivale/tm_print.hpp"
 
-void pre_setup()
+void setupMemory()
 {
+  memory::InitPageframe();
+  tm_printf("Page frame initialized");
+  tm_printf("Total memory:    %d\nFree memory:     %d\nUsed memory:     %d\nReserved memory: %d", memory::GetTotalMemory(), memory::GetFreeMemory(), memory::GetUsedMemory(), memory::GetReservedMemory());
 
+  memory::InitPaging();
+  tm_printf("Paging initialized");
 }
