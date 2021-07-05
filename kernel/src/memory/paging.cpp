@@ -3,7 +3,6 @@
 //
 
 #include "paging.hpp"
-#include "memory_frame.hpp"
 #include "../lib/stmm.hpp"
 #include "memory.hpp"
 #include "../stivale/stivale_tags_structure.hpp"
@@ -40,6 +39,7 @@ namespace memory
     {
       void* virtual_address = (void*)(ptr + kernel_virtual_base);
       MemoryMap(virtual_address, (void*)ptr);
+
       if(ptr >= (uint64_t)kernel_writable_physical_start && ptr < (uint64_t)kernel_writable_physical_end)
       {
         SetWritable((void*)virtual_address, 1);
@@ -54,9 +54,7 @@ namespace memory
 
     for(size_t i = 0; i < entries_num; i++) {
       stivale2_mmap_entry* memorymap_entry = memorymap + i;
-      if(memorymap_entry->type != STIVALE2_MMAP_USABLE){
-        continue;
-      }
+      if(memorymap_entry->type != STIVALE2_MMAP_USABLE) continue;
 
       IdentityMap((void*)memorymap_entry->base, NEAREST_PAGE_COUNT(memorymap_entry->length));
       SetWritable((void*)memorymap_entry->base, NEAREST_PAGE_COUNT(memorymap_entry->length));
@@ -64,12 +62,6 @@ namespace memory
 
     // Map rest of memory regions
     IdentityMapSize((void*)0, GetTotalMemory());
-
-    // Map framebuffer
-    IdentityMapSize((void*)tags->framebuffer->framebuffer_addr, tags->framebuffer->framebuffer_pitch * tags->framebuffer->framebuffer_height);
-    SetWritableSize((void*)tags->framebuffer->framebuffer_addr, tags->framebuffer->framebuffer_pitch * tags->framebuffer->framebuffer_height);
-
-    asm("mov %0, %%cr3" : : "r"(l4_page));
   }
 
   void MemoryMap(void* virtual_addr, void* phys_addr)
@@ -156,16 +148,16 @@ namespace memory
     IdentityMap(addr, NEAREST_PAGE_COUNT(size));
   }
 
-  void SetAttribute(PageTable* pagetable_l4, void* virtual_address, size_t pages, PageDirectoryFlag attribute, bool enabled)
+  void SetAttribute(void* virtual_address, size_t pages, PageDirectoryFlag attribute, bool enabled)
   {
     for (size_t i = 0; i < pages; i++)
     {
       PageDirectoryEntry entry;
       PageMapIndexer indexes((uint64_t)virtual_address + (i * PAGE_SIZE));
 
-      entry = pagetable_l4->entries[indexes.l4_i];
+      entry = l4_page->entries[indexes.l4_i];
       entry.SetFlag(attribute, enabled);
-      pagetable_l4->entries[indexes.l4_i] = entry;
+      l4_page->entries[indexes.l4_i] = entry;
 
       PageTable *pagetable_l3 = (PageTable*)((uint64_t)entry.GetAddress() << 12);
       entry = pagetable_l3->entries[indexes.l3_i];
@@ -186,10 +178,15 @@ namespace memory
 
   void SetWritable(void* virtual_address, size_t pages)
   {
-    SetAttribute(l4_page, virtual_address, pages, PAGE_DIRECTORY_WRITABLE, true);
+    SetAttribute(virtual_address, pages, PAGE_DIRECTORY_WRITABLE, true);
   }
   void SetWritableSize(void* virtual_address, size_t size)
   {
     SetWritable(virtual_address, NEAREST_PAGE_COUNT(size));
+  }
+
+  PageTable *GetL4Table()
+  {
+    return l4_page;
   }
 }

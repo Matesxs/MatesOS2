@@ -7,6 +7,7 @@
 
 #include "page_table.hpp"
 #include "stddef.h"
+#include "memory_frame.hpp"
 
 namespace memory
 {
@@ -26,9 +27,11 @@ namespace memory
   void IdentityMap(void *addr, size_t pages);
   void IdentityMapSize(void *addr, size_t size);
 
-  void SetAttribute(PageTable* pagetable_l4, void* virtual_address, size_t pages, PageDirectoryFlag attribute, bool enabled);
+  void SetAttribute(void* virtual_address, size_t pages, PageDirectoryFlag attribute, bool enabled);
   void SetWritable(void* virtual_address, size_t pages);
   void SetWritableSize(void* virtual_address, size_t size);
+
+  PageTable *GetL4Table();
 }
 
 #endif //MATESOS2_PAGING_HPP
