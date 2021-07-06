@@ -7,7 +7,6 @@
 #include "stivale/tm_print.hpp"
 #include "setup.hpp"
 #include "lib/stmm.hpp"
-#include "memory/memory.hpp"
 
 extern "C" __attribute__((unused, noreturn)) void _start(stivale2_struct *stivale2_struct)
 {
@@ -20,8 +19,8 @@ extern "C" __attribute__((unused, noreturn)) void _start(stivale2_struct *stival
   printBootloaderInfo(stivale2_struct);
 
   tm_printf("\nKernel initialization started");
+  preSetup();
   setupMemory();
-  generalSetup();
 
   while(true) asm("hlt");
 }

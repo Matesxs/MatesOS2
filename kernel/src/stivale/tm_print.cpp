@@ -20,6 +20,11 @@ void tm_init()
   stivale2_print = (void(*)(const char*, size_t))(term_write_ptr);
 }
 
+void tm_disable()
+{
+  stivale2_print = NULL;
+}
+
 void tm_putc(char c) {
   if (stivale2_print != NULL)
     stivale2_print(&c, 1);

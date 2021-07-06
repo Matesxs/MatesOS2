@@ -21,10 +21,10 @@ ASMSRC = $(call rwildcard,$(SRCDIR),*.asm)
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
 
-#$(OBJDIR)/interrupts/interrupts.o: $(SRCDIR)/interrupts/interrupts.cpp | $(OBJDIR)
-#	@ echo !======= COMPILING $^
-#	@ mkdir -p $(@D)
-#	$(CC) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
+$(OBJDIR)/interrupts/interrupt_handlers.o: $(SRCDIR)/interrupts/interrupt_handlers.cpp | $(OBJDIR)
+	@ echo !======= COMPILING $^
+	@ mkdir -p $(@D)
+	$(CC) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
 	@ echo !======= COMPILING $^
