@@ -9,7 +9,7 @@
 
 namespace BasicRenderer
 {
-  void InitBasicRenderer();
+  bool InitBasicRenderer();
 }
 
 #endif //MATESOS2_BASIC_RENDERER_HPP

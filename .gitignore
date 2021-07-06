@@ -4,3 +4,4 @@ limine/
 *.lock
 *.log
 .gradle/
+OVMFbin/

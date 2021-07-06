@@ -64,29 +64,15 @@ void *stivale2_get_tag(stivale2_struct *stivale2_struct, uint64_t id) {
   }
 }
 
-void stivale2_get_module(stivale2_struct_tag_modules* stivale2_struct, const char *sign, stivale2_module *module)
-{
+void stivale2_get_module(stivale2_struct_tag_modules* stivale2_struct, const char *sign, Module *module, size_t headerSize) {
   for (size_t i = 0; i < stivale2_struct->module_count; i++) {
     stivale2_module me = stivale2_struct->modules[i];
-    if (strcmp(me.string, sign) == 0)
-    {
-      memcpy(module->string, me.string, 128 * sizeof(char));
-      module->begin = me.begin;
-      module->end = me.end;
+    if (strcmp(me.string, sign) == 0) {
+      module->header = (void *) me.begin;
+      module->body = (void *) (me.begin + headerSize);
+      module->size = me.end - me.begin;
     }
   }
-}
-
-PSF1Font *stivale2_get_font(stivale2_struct_tag_modules* stivale2_struct)
-{
-  stivale2_module module;
-  stivale2_get_module(stivale2_struct, "font", &module);
-  if ((void*)module.begin == NULL) return NULL;
-
-  PSF1Font *font = (PSF1Font*)module.begin;
-  if (font->header.magic[0] != PSF1_MAGIC0 || font->header.magic[1] != PSF1_MAGIC1) return NULL;
-
-  return font;
 }
 
 void printBootloaderInfo(stivale2_struct *stivale2_struct)

@@ -48,13 +48,13 @@ $(OBJDIR):
 	@echo !======= Creating build object
 	@mkdir $(OBJDIR)
 
-.PHONY: debug clean $(ISO_IMAGE) init clean_kernel
+.PHONY: debug clean $(ISO_IMAGE) init clean_kernel run run_debug run_efi
 
 all: $(ISO_IMAGE)
 
 init:
 	sudo apt-get install gcc nasm gdb
-	sudo apt-get install qemu qemu-system-common
+	sudo apt-get install qemu qemu-system-common ovmf
 
 debug: CFLAGS += -g
 debug: clean_kernel kernel
@@ -93,8 +93,14 @@ $(ISO_IMAGE): limine kernel
 run: image
 	qemu-system-x86_64 -M q35 -m 2G -cdrom $(ISO_IMAGE)
 
+run_efi: image
+	qemu-system-x86_64 -machine q35 -cdrom $(ISO_IMAGE) -m 2G -bios /usr/share/ovmf/OVMF.fd
+
 run_debug: debug image
 	qemu-system-x86_64 -s -S -M q35 -m 2G -cdrom $(ISO_IMAGE)
+
+run_efi_debug: debug image
+	qemu-system-x86_64 -s -S -machine q35 -cdrom $(ISO_IMAGE) -m 2G -bios /usr/share/ovmf/OVMF.fd
 
 clean_kernel:
 	rm -rf $(BUILDDIR)

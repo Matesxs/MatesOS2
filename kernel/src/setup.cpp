@@ -28,5 +28,11 @@ void setupMemory()
 
 void generalSetup()
 {
-  BasicRenderer::InitBasicRenderer();
+  if (BasicRenderer::InitBasicRenderer())
+    tm_printf("Basic renderer initialized");
+  else
+  {
+    tm_printf("Failed to initialize framebuffer");
+    while (true) asm("hlt");
+  }
 }
