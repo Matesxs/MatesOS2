@@ -57,7 +57,7 @@ init:
 	sudo apt-get install qemu qemu-system-common
 
 debug: CFLAGS += -g
-debug: clean kernel
+debug: clean_kernel kernel
 
 kernel: $(BUILDDIR)/kernel.elf
 
@@ -77,7 +77,7 @@ $(ISO_IMAGE): limine kernel
 	mkdir -p iso_root/static_data
 
 	cp limine.cfg limine/limine.sys limine/limine-cd.bin limine/limine-eltorito-efi.bin startup.nsh iso_root/
-	cp static_data/bg.bmp iso_root/static_data/
+	cp -rf static_data/* iso_root/static_data/
 	cp $(BUILDDIR)/kernel.elf limine/BOOTX64.EFI iso_root/boot/
 
 	xorriso -as mkisofs -b limine-cd.bin \

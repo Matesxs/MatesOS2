@@ -6,6 +6,7 @@
 #include "memory/memory.hpp"
 #include "stivale/tm_print.hpp"
 #include "stivale/stivale_tags_structure.hpp"
+#include "renderer/basic_renderer.hpp"
 
 void setupMemory()
 {
@@ -23,4 +24,9 @@ void setupMemory()
   memory::PageTable *l4_table = memory::GetL4Table();
   asm("mov %0, %%cr3" : : "r"(l4_table));
   tm_printf("Paging initialized");
+}
+
+void generalSetup()
+{
+  BasicRenderer::InitBasicRenderer();
 }

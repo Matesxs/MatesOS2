@@ -8,6 +8,7 @@
 #include "stdint.h"
 
 void setupMemory();
+void generalSetup();
 
 extern uint64_t _virtual_base;
 extern uint64_t _KernelStart;
