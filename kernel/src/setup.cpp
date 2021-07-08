@@ -15,6 +15,7 @@
 #include "acpi/acpi.hpp"
 #include "cpu/cpuid/features.hpp"
 #include "cpu/cpuid/cpuInfo.hpp"
+#include "utils/driver.hpp"
 
 void printCPUInfo()
 {
@@ -61,30 +62,6 @@ void setupMemory()
   logging::log(logging::SUCCESS, "Paging setup");
 }
 
-void preSetup()
-{
-  if (!BasicRenderer::InitBasicRenderer())
-  {
-    tm_printf("[PANIC] Failed to init basic renderer");
-    while (true) asm("hlt");
-  }
-  BasicRenderer::ClearScreen();
-  BasicRenderer::SetCursor(4, 0);
-
-  logging::log(logging::SUCCESS, "Basic Renderer initialized");
-
-  CPU::feature::cpu_enable_features();
-  logging::log(logging::SUCCESS, "CPU Info loaded");
-  printCPUInfo();
-
-  tm_disable(); // We can disable stivale terminal because now we have framebuffer
-  GDTBlock *gtd_block = GDTInit();
-  LoadGDT(&gtd_block->descriptor);
-  logging::log(logging::SUCCESS, "GDT Loaded");
-
-  setupInterrupts();
-}
-
 void setupACPI()
 {
   stivale2_struct_tag_rsdp *rsdpTag = getTags()->rsdp;
@@ -123,4 +100,40 @@ void setupACPI()
 
   ACPI::FACPHeader *facp = (ACPI::FACPHeader*)FindTable(rootHeader, (char*)"FACP");
   if (facp == NULL) return Panic("FACP Table not found");
+}
+
+void preSetup()
+{
+  if (!BasicRenderer::InitBasicRenderer())
+  {
+    tm_printf("[PANIC] Failed to init basic renderer");
+    while (true) asm("hlt");
+  }
+  BasicRenderer::ClearScreen();
+  BasicRenderer::SetCursor(4, 0);
+
+  logging::log(logging::SUCCESS, "Basic Renderer initialized");
+
+  CPU::feature::cpu_enable_features();
+  logging::log(logging::SUCCESS, "CPU Info loaded");
+  printCPUInfo();
+
+  tm_disable(); // We can disable stivale terminal because now we have framebuffer
+  GDTBlock *gtd_block = GDTInit();
+  LoadGDT(&gtd_block->descriptor);
+  logging::log(logging::SUCCESS, "GDT Loaded");
+
+  setupInterrupts();
+}
+
+void setupMain()
+{
+  setupMemory();
+  setupACPI();
+}
+
+void postSetup()
+{
+  if (driver::g_DriverManager.get_num_of_drivers() > 0) driver::g_DriverManager.activate_all();
+  else logging::log(logging::WARNING, "No drivers to load");
 }
