@@ -5,3 +5,4 @@ limine/
 *.log
 .gradle/
 OVMFbin/
+iso_root/
