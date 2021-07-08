@@ -1,5 +1,13 @@
 [bits 64]
 
+GLOBAL	io_apic_enable
+io_apic_enable:
+	mov		ecx, 0x1b	; IA32_APIC_BASE_MSR
+	rdmsr
+	or		eax, 0x800	; IA32_APIC_BASE_MSR_ENABLE
+	wrmsr
+	ret
+
 GLOBAL	outb
 outb:	; rdi=[port], rsi=[value]
 	mov	rdx, rdi	; port
