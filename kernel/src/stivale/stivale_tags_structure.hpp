@@ -6,14 +6,17 @@
 #define MATESOS2_STIVALE_TAGS_STRUCTURE_HPP
 
 #include "stivale2.h"
+#include "../renderer/framebuffer.hpp"
+#include "module.hpp"
 
 struct StivaleTags
 {
   stivale2_struct_tag_terminal *terminal_tag;
   stivale2_struct_tag_memmap *memory_tag;
-  stivale2_struct_tag_framebuffer *framebuffer;
+  Framebuffer framebuffer;
   stivale2_struct_tag_rsdp *rsdp;
-  stivale2_struct_tag_modules *modules;
+  Module fontModule;
+  Module bgImage;
 };
 
 StivaleTags *getTags();

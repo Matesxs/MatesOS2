@@ -21,33 +21,6 @@ ASMSRC = $(call rwildcard,$(SRCDIR),*.asm)
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
 
-$(OBJDIR)/interrupts/interrupt_handlers.o: $(SRCDIR)/interrupts/interrupt_handlers.cpp | $(OBJDIR)
-	@ echo !======= COMPILING $^
-	@ mkdir -p $(@D)
-	$(CC) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
-
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
-	@ echo !======= COMPILING $^
-	@ mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $^ -o $@
-
-$(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm | $(OBJDIR)
-	@ echo !======= COMPILING $^
-	@ mkdir -p $(@D)
-	$(ASMC) $(ASMFLAGS) $^ -f elf64 -o $@
-
-$(BUILDDIR)/kernel.elf: $(OBJS) | $(BUILDDIR)
-	@ echo !======= LINKING $^
-	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS)
-
-$(BUILDDIR):
-	@echo !======= Creating build directory
-	@mkdir $(BUILDDIR)
-
-$(OBJDIR):
-	@echo !======= Creating build object
-	@mkdir $(OBJDIR)
-
 .PHONY: debug clean $(ISO_IMAGE) init clean_kernel run run_debug run_efi
 
 all: $(ISO_IMAGE)
@@ -109,3 +82,30 @@ clean_kernel:
 clean: clean_kernel
 	rm -rf limine
 	rm -rf $(ISO_IMAGE)
+
+$(OBJDIR)/interrupts/interrupt_handlers.o: $(SRCDIR)/interrupts/interrupt_handlers.cpp | $(OBJDIR)
+	@ echo !======= COMPILING $^
+	@ mkdir -p $(@D)
+	$(CC) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
+	@ echo !======= COMPILING $^
+	@ mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $^ -o $@
+
+$(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm | $(OBJDIR)
+	@ echo !======= COMPILING $^
+	@ mkdir -p $(@D)
+	$(ASMC) $(ASMFLAGS) $^ -f elf64 -o $@
+
+$(BUILDDIR)/kernel.elf: $(OBJS) | $(BUILDDIR)
+	@ echo !======= LINKING $^
+	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS)
+
+$(BUILDDIR):
+	@echo !======= Creating build directory
+	@mkdir $(BUILDDIR)
+
+$(OBJDIR):
+	@echo !======= Creating build object
+	@mkdir $(OBJDIR)

@@ -9,6 +9,7 @@
 
 #define PSF1_MAGIC0 0x36
 #define PSF1_MAGIC1 0x04
+#define PSF1_CHAR_WIDTH 8
 
 struct PSF1Header
 {
@@ -28,8 +29,31 @@ struct ModuleTGAHeader {
   uint16_t	yorg;
   uint16_t	width;
   uint16_t	height;
-  uint8_t		bbp;
+  uint8_t		bpp;
   uint8_t		descriptor;
 } __attribute__((packed));
+
+struct ModuleBMPHeader {
+  uint16_t indentifier;
+  uint32_t bitmapSize;
+  uint16_t res0;
+  uint16_t res1;
+  uint32_t dataAddressOffset;
+} __attribute__((packed));
+
+struct ModuleBMPInfoHeader
+{
+  uint32_t headerSize;
+  int32_t bitmapWidth;
+  int32_t bitmapHeight;
+  uint16_t numberOfColorPlanes;
+  uint16_t bpp;
+  uint32_t compressionMethod;
+  uint32_t imageSize;
+  int32_t horizontalRes;
+  int32_t verticalRes;
+  uint32_t colorPalette;
+  uint32_t ignored;
+}__attribute__((packed));
 
 #endif //MATESOS2_PSF1_FONT_HPP

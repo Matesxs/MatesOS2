@@ -22,15 +22,15 @@ void setupInterrupts()
 
 void setupMemory()
 {
-  stivale2_struct_tag_framebuffer *fb = getTags()->framebuffer;
-  size_t framebufferSize = fb->framebuffer_pitch * fb->framebuffer_height;
+  Framebuffer fb = getTags()->framebuffer;
+  size_t framebufferSize = fb.pitch * fb.height;
 
   memory::InitPageframe();
-  memory::PageframeReserveSize((void*)fb->framebuffer_addr, framebufferSize);
+  memory::PageframeReserveSize((void*)fb.base_address, framebufferSize);
 
   memory::InitPaging();
-  memory::IdentityMapSize((void*)fb->framebuffer_addr, framebufferSize);
-  memory::SetWritableSize((void*)fb->framebuffer_addr, framebufferSize);
+  memory::IdentityMapSize((void*)fb.base_address, framebufferSize);
+  memory::SetWritableSize((void*)fb.base_address, framebufferSize);
   memory::PageTable *l4_table = memory::GetL4Table();
   asm("mov %0, %%cr3" : : "r"(l4_table));
 }
@@ -39,10 +39,12 @@ void preSetup()
 {
   if (!BasicRenderer::InitBasicRenderer())
   {
+    tm_printf("[PANIC] Failed to init basic renderer");
     while (true) asm("hlt");
   }
+  BasicRenderer::ClearScreen();
 
-  tm_disable();
+  tm_disable(); // We can disable stivale terminal because now we have framebuffer
   GDTBlock *gtd_block = GDTInit();
   LoadGDT(&gtd_block->descriptor);
 

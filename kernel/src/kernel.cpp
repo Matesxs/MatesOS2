@@ -8,6 +8,8 @@
 #include "setup.hpp"
 #include "lib/stmm.hpp"
 
+#include "renderer/basic_renderer.hpp"
+
 extern "C" __attribute__((unused, noreturn)) void _start(stivale2_struct *stivale2_struct)
 {
   // Clear writable part of kernel in case there is some garbage

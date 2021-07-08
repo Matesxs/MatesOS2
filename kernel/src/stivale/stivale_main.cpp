@@ -75,6 +75,18 @@ void stivale2_get_module(stivale2_struct_tag_modules* stivale2_struct, const cha
   }
 }
 
+void stivale2_get_framebuffer(stivale2_struct* stivale2_struct, Framebuffer *framebuffer)
+{
+  stivale2_struct_tag_framebuffer *fb = (stivale2_struct_tag_framebuffer*)stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
+  if (fb == NULL) return;
+
+  framebuffer->base_address = (void*)fb->framebuffer_addr;
+  framebuffer->width = fb->framebuffer_width;
+  framebuffer->height = fb->framebuffer_height;
+  framebuffer->pitch = fb->framebuffer_pitch;
+  framebuffer->bpp = fb->framebuffer_bpp;
+}
+
 void printBootloaderInfo(stivale2_struct *stivale2_struct)
 {
   tm_puts("Stivale2 info passed to the kernel:");
