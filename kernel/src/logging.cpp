@@ -19,15 +19,22 @@ namespace logging
     {
       case INFO:
       {
-        BasicRenderer::Print("[ INFO ] ");
+        BasicRenderer::Print("[ INF ] ");
         break;
       }
 
-      case NO_ERROR:
+      case INFOPlus:
+      {
+        BasicRenderer::SetFrontColor(BasicRenderer::BR_DARK_CYAN);
+        BasicRenderer::Print("   - ");
+        break;
+      }
+
+      case SUCCESS:
       {
         BasicRenderer::Print("[ ");
         BasicRenderer::SetFrontColor(BasicRenderer::BR_GREEN);
-        BasicRenderer::Print("OK");
+        BasicRenderer::Print("SUC");
         BasicRenderer::SetFrontColor(BasicRenderer::BR_WHITE);
         BasicRenderer::Print(" ] ");
         break;
@@ -37,7 +44,7 @@ namespace logging
       {
         BasicRenderer::Print("[ ");
         BasicRenderer::SetFrontColor(BasicRenderer::BR_YELLOW);
-        BasicRenderer::Print("WARN");
+        BasicRenderer::Print("WRN");
         BasicRenderer::SetFrontColor(BasicRenderer::BR_WHITE);
         BasicRenderer::Print(" ] ");
         break;

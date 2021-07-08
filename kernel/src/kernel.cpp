@@ -24,6 +24,7 @@ extern "C" __attribute__((unused, noreturn)) void _start(stivale2_struct *stival
 
   preSetup();
   setupMemory();
+  setupACPI();
 
   while(true) asm("hlt");
 }

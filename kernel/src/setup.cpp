@@ -11,6 +11,8 @@
 #include "interrupts/interrupt.hpp"
 #include "interrupts/interrupt_handlers.hpp"
 #include "gdt/gdt.hpp"
+#include "panic.hpp"
+#include "acpi/acpi.hpp"
 
 void setupInterrupts()
 {
@@ -57,4 +59,43 @@ void preSetup()
   logging::log(logging::SUCCESS, "GDT Loaded");
 
   setupInterrupts();
+}
+
+void setupACPI()
+{
+  stivale2_struct_tag_rsdp *rsdpTag = getTags()->rsdp;
+  if (rsdpTag == NULL) return Panic("RSDP tag not found");
+
+  ACPI::RSDP2 *rsdp = (ACPI::RSDP2*)rsdpTag->rsdp;
+  if (rsdp == NULL) return Panic("RSDP Table not found");
+
+  logging::log(logging::INFO, "RSDP Table found");
+  logging::log(logging::INFOPlus, "Revision: %d", rsdp->Revision);
+
+  ACPI::SDTHeader *rootHeader = NULL;
+  void *(*FindTable)(ACPI::SDTHeader*, char*) = NULL;
+
+  if (rsdp->Revision >= 2)
+  {
+    // XSDT available
+    logging::log(logging::INFO, "Using XSDT");
+    rootHeader = (ACPI::SDTHeader*)(rsdp->XSDTAddress);
+    FindTable = &ACPI::FindXSDTTable;
+
+    ACPI::EnumXSDT(rootHeader);
+  }
+  else
+  {
+    // XSDT available
+    logging::log(logging::INFO, "Using RSDT");
+    rootHeader = (ACPI::SDTHeader*)(uint64_t)(rsdp->RSDTAddress);
+    FindTable = &ACPI::FindRSDTTable;
+
+    ACPI::EnumRSDT(rootHeader);
+  }
+
+  if (rootHeader == NULL) return Panic("Root ACPI header not found");
+
+  ACPI::FACPHeader *facp = (ACPI::FACPHeader*)FindTable(rootHeader, (char*)"FACP");
+  if (facp == NULL) return Panic("FACP Table not found");
 }

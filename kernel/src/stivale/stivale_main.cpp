@@ -6,9 +6,11 @@
 #include "tm_print.hpp"
 #include "../lib/ststr.hpp"
 #include "../lib/stmm.hpp"
+#include "../memory/memory.hpp"
 
-// TODO: Set this according to definition of page size
-static uint8_t stack[4096 * 32];
+#define STACK_PAGES 32
+
+static uint8_t stack[PAGE_SIZE * STACK_PAGES];
 
 struct stivale2_header_tag_smp smp_request = {
     .tag = {

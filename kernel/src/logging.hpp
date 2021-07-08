@@ -12,6 +12,7 @@ namespace logging
   enum LoggingLevel
   {
     INFO,
+    INFOPlus,
     SUCCESS,
     WARNING,
     ERROR

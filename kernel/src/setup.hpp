@@ -10,6 +10,7 @@
 void setupInterrupts();
 void setupMemory();
 void preSetup();
+void setupACPI();
 
 extern uint64_t _virtual_base;
 extern uint64_t _KernelStart;
