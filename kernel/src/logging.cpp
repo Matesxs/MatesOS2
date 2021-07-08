@@ -30,6 +30,12 @@ namespace logging
         break;
       }
 
+      case INFOPlusC:
+      {
+        BasicRenderer::SetFrontColor(BasicRenderer::BR_DARK_CYAN);
+        break;
+      }
+
       case SUCCESS:
       {
         BasicRenderer::Print("[ ");
@@ -62,9 +68,15 @@ namespace logging
     }
 
     BasicRenderer::Printfa(format, args);
-    BasicRenderer::NewLine();
+    if (lvl != INFOPlus && lvl != INFOPlusC)
+      BasicRenderer::NewLine();
 
     va_end(args);
     BasicRenderer::SetFrontColor(tmpColor);
+  }
+
+  void newln()
+  {
+    BasicRenderer::NewLine();
   }
 }

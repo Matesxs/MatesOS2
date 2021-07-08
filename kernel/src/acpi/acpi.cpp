@@ -48,6 +48,7 @@ namespace ACPI
         headerSignature[4] = '\0';
 
         logging::log(logging::INFOPlus, "%s / Revision: %d / OEM Revision %d / Creator Revision: %d", headerSignature, newSDTHeader->Revision, newSDTHeader->OEMRevision, newSDTHeader->CreatorRevision);
+        logging::newln();
       }
     }
 
@@ -90,6 +91,7 @@ namespace ACPI
         headerSignature[4] = '\0';
 
         logging::log(logging::INFOPlus, "%s / Revision: %d / OEM Revision %d / Creator Revision: %d", headerSignature, newSDTHeader->Revision, newSDTHeader->OEMRevision, newSDTHeader->CreatorRevision);
+        logging::newln();
       }
     }
 

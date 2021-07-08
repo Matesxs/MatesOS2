@@ -13,12 +13,14 @@ namespace logging
   {
     INFO,
     INFOPlus,
+    INFOPlusC,
     SUCCESS,
     WARNING,
     ERROR
   };
 
   void log(LoggingLevel lvl, const char *format, ...);
+  void newln();
 }
 
 #endif //MATESOS2_LOGGING_HPP

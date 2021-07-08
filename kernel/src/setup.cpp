@@ -13,6 +13,26 @@
 #include "gdt/gdt.hpp"
 #include "panic.hpp"
 #include "acpi/acpi.hpp"
+#include "cpu/cpuid/features.hpp"
+#include "cpu/cpuid/cpuInfo.hpp"
+
+void printCPUInfo()
+{
+  CPU::CPUInfo cpuInfo = CPU::GetCPUInfo();
+
+  logging::log(logging::INFOPlus, "Vendor: %s (%d)", cpuInfo.VendorString, cpuInfo.VendorID);
+  logging::newln();
+
+  logging::log(logging::INFOPlus, "Brand: %s", cpuInfo.BrandString);
+  logging::newln();
+
+  logging::log(logging::INFOPlus, "Features: ");
+  if (CPU::feature::APIC()) logging::log(logging::INFOPlusC, "APIC ");
+  if (CPU::feature::FPU()) logging::log(logging::INFOPlusC, "FPU ");
+  if (CPU::feature::X2APIC()) logging::log(logging::INFOPlusC, "X2APIC ");
+  if (CPU::feature::SSE()) logging::log(logging::INFOPlusC, "SSE ");
+  logging::newln();
+}
 
 void setupInterrupts()
 {
@@ -53,6 +73,10 @@ void preSetup()
 
   logging::log(logging::SUCCESS, "Basic Renderer initialized");
 
+  CPU::feature::cpu_enable_features();
+  logging::log(logging::SUCCESS, "CPU Info loaded");
+  printCPUInfo();
+
   tm_disable(); // We can disable stivale terminal because now we have framebuffer
   GDTBlock *gtd_block = GDTInit();
   LoadGDT(&gtd_block->descriptor);
@@ -71,6 +95,7 @@ void setupACPI()
 
   logging::log(logging::INFO, "RSDP Table found");
   logging::log(logging::INFOPlus, "Revision: %d", rsdp->Revision);
+  logging::newln();
 
   ACPI::SDTHeader *rootHeader = NULL;
   void *(*FindTable)(ACPI::SDTHeader*, char*) = NULL;
