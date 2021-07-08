@@ -16,6 +16,7 @@
 #include "cpu/cpuid/features.hpp"
 #include "cpu/cpuid/cpuInfo.hpp"
 #include "utils/driver.hpp"
+#include "lib/stmm.hpp"
 
 void printCPUInfo()
 {
@@ -102,8 +103,16 @@ void setupACPI()
   if (facp == NULL) return Panic("FACP Table not found");
 }
 
-void preSetup()
+void preSetup(stivale2_struct *stivale2_struct)
 {
+  // Clear writable part of kernel in case there is some garbage
+  memset(&_WritableStart, 0, (uint64_t)&_WritableEnd - (uint64_t)&_WritableStart);
+
+  // Init basic functionality from bootloader
+  getTags(stivale2_struct);
+  tm_init();
+  printBootloaderInfo(stivale2_struct);
+
   if (!BasicRenderer::InitBasicRenderer())
   {
     tm_printf("[PANIC] Failed to init basic renderer");

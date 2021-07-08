@@ -6,8 +6,9 @@
 #define MATESOS2_SETUP_HPP
 
 #include "stdint.h"
+#include "stivale/stivale2.h"
 
-void preSetup();
+void preSetup(stivale2_struct *stivale2_struct);
 void setupMain();
 void postSetup();
 
