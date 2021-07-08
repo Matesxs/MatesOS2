@@ -8,6 +8,7 @@
 namespace interrupts
 {
   void InitExceptions();
+  void InitPICHandler();
 }
 
 #endif //MATESOS2_INTERRUPT_HANDLERS_HPP

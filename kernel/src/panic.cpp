@@ -12,6 +12,7 @@ __attribute__((noreturn))void Panic(const char *message)
   BasicRenderer::SetBackColor(BasicRenderer::BR_RED);
   BasicRenderer::SetFrontColor(BasicRenderer::BR_BLACK);
 
+  BasicRenderer::ClearScreen();
   BasicRenderer::SetCursor(10, 15);
   BasicRenderer::Print("KERNEL PANIC\n\n");
   BasicRenderer::Print(message);

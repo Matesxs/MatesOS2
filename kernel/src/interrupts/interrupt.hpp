@@ -12,6 +12,7 @@ namespace interrupts
 {
   void Init();
   void AddHandler(void* handler, uint8_t entryOffset, uint8_t type_attr, uint8_t selector);
+  void RemoveHandler(uint8_t entryOffset);
   void Load();
 }
 

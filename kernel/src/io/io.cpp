@@ -32,9 +32,9 @@ namespace IO
     outb(IO_PIC2_COMMAND, IO_ICW1_INIT | IO_ICW1_ICW4);
     io_wait();
     // Tell each PIC their offset
-    outb(IO_PIC1_DATA, 0x20);
+    outb(IO_PIC1_DATA, IRQ_PIC_OFFSET);
     io_wait();
-    outb(IO_PIC2_DATA, 0x28);
+    outb(IO_PIC2_DATA, IRQ_PIC_OFFSET + 8);
     io_wait();
     outb(IO_PIC1_DATA, 0x04);
     io_wait();

@@ -25,23 +25,24 @@
 #define IO_PIC_EOI 0x20
 
 #define IRQ_NUM 16
+#define IRQ_PIC_OFFSET 0x20
 
-#define IRQ_TIMER 0
-#define IRQ_KEYBOARD 1
-#define IRQ_TO_SLAVE_PIC 2
-#define IRQ_COM2_4 3
-#define IRQ_COM1_3 4
-#define IRQ_LPT2 5
-#define IRQ_FLOPPY 6
-#define IRQ_LPT1 7
-#define IRQ_REAL_TIME_CLOCK 8
-#define IRQ_AVAILABLE_1 9
-#define IRQ_AVAILABLE_2 10
-#define IRQ_AVAILABLE_3 11
-#define IRQ_MOUSE 12
-#define IRQ_MATH_CPU 13
-#define IRQ_FIRST_HD 14
-#define IRQ_SECOND_HD 15
+#define IO_IRQ_TIMER 0
+#define IO_IRQ_KEYBOARD 1
+#define IO_IRQ_TO_SLAVE_PIC 2
+#define IO_IRQ_COM2_4 3
+#define IO_IRQ_COM1_3 4
+#define IO_IRQ_LPT2 5
+#define IO_IRQ_FLOPPY 6
+#define IO_IRQ_LPT1 7
+#define IO_IRQ_REAL_TIME_CLOCK 8
+#define IO_IRQ_AVAILABLE_1 9
+#define IO_IRQ_AVAILABLE_2 10
+#define IO_IRQ_AVAILABLE_3 11
+#define IO_IRQ_MOUSE 12
+#define IO_IRQ_MATH_CPU 13
+#define IO_IRQ_FIRST_HD 14
+#define IO_IRQ_SECOND_HD 15
 
 namespace IO
 {

@@ -3,6 +3,7 @@
 //
 
 #include "interrupt.hpp"
+#include "stddef.h"
 
 namespace interrupts
 {
@@ -21,6 +22,15 @@ namespace interrupts
     interrupt->SetOffset((uint64_t)handler);
     interrupt->Type_Attr = type_attr;
     interrupt->Selector = selector;
+    interrupt->Zero = 0;
+  }
+
+  void RemoveHandler(uint8_t entryOffset)
+  {
+    IDTDescEntry *interrupt = (IDTDescEntry*)(idtr.Base + entryOffset * sizeof(IDTDescEntry));
+    interrupt->SetOffset((uint64_t)NULL);
+    interrupt->Type_Attr = 0;
+    interrupt->Selector = 0;
     interrupt->Zero = 0;
   }
 

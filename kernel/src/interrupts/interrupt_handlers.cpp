@@ -6,6 +6,7 @@
 #include "../panic.hpp"
 #include "interrupt.hpp"
 #include "../logging.hpp"
+#include "../io/io.hpp"
 
 namespace interrupts
 {
@@ -29,11 +30,27 @@ namespace interrupts
     while (true) asm("hlt");
   }
 
+  __attribute__((interrupt)) static void KeyboardInt_Handler(interrupt_frame *frame)
+  {
+    uint8_t scanCode = IO::inb(0x60);
+    logging::log(logging::INFO, "keybord interrupt handler called with scancode: %d", scanCode);
+    IO::io_pic_end_master();
+  }
+
   void InitExceptions()
   {
     AddHandler((void*)PageFault_Handler, 0xE, IDT_TA_TrapGate, 0x08);
-    AddHandler((void*)DoubleFault_Handler, 0x8, IDT_TA_InterruptGate, 0x08);
-    AddHandler((void*)GPFault_Handler, 0xD, IDT_TA_InterruptGate, 0x08);
+    AddHandler((void*)DoubleFault_Handler, 0x8, IDT_TA_TrapGate, 0x08);
+    AddHandler((void*)GPFault_Handler, 0xD, IDT_TA_TrapGate, 0x08);
     logging::log(logging::SUCCESS, "Exception handlers initialized");
+  }
+
+  void InitPICHandler()
+  {
+    AddHandler((void*)KeyboardInt_Handler, IRQ_PIC_OFFSET + IO_IRQ_KEYBOARD, IDT_TA_InterruptGate, 0x08);
+    IO::io_pic_irq_enable(IO_IRQ_KEYBOARD);
+
+    IO::io_pic_remap();
+    logging::log(logging::SUCCESS, "PIC handlers initialized");
   }
 }

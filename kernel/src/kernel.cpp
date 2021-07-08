@@ -20,11 +20,11 @@ extern "C" __attribute__((unused, noreturn)) void _start(stivale2_struct *stival
   tm_init();
   printBootloaderInfo(stivale2_struct);
 
-  tm_printf("\nKernel initialization started");
-
   preSetup();
   setupMemory();
   setupACPI();
+
+  asm("sti");
 
   while(true) asm("hlt");
 }

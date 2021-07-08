@@ -38,8 +38,8 @@ void setupInterrupts()
 {
   interrupts::Init();
   interrupts::InitExceptions();
+  interrupts::InitPICHandler();
   interrupts::Load();
-
   logging::log(logging::SUCCESS, "Interrupts initialized");
 }
 
