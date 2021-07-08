@@ -20,9 +20,11 @@ namespace BasicRenderer
   void ClearScreen();
   void Scroll();
 
+  void NewLine();
   void PutChar(char c);
   void Print(const char *string);
   void Printf(const char *format, ...);
+  void Printfa(const char *format, va_list argp);
 
   void SetCursor(uint16_t x, uint16_t y);
   bool SetFont(PSF1Header *_fontHeader, uint8_t *_charBuffer);
@@ -30,6 +32,7 @@ namespace BasicRenderer
   void SetFrontColor(Color color);
   void SetBackColor(Color color);
 
+  Color GetFrontColor();
   Framebuffer *GetFramebuffer();
 
   // image extension

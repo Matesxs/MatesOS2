@@ -21,6 +21,7 @@ extern "C" __attribute__((unused, noreturn)) void _start(stivale2_struct *stival
   printBootloaderInfo(stivale2_struct);
 
   tm_printf("\nKernel initialization started");
+
   preSetup();
   setupMemory();
 

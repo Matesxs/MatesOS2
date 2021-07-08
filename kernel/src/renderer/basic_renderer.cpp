@@ -121,6 +121,11 @@ namespace BasicRenderer
     {
       goto newline;
     }
+    else if (c == '\t')
+    {
+      Print("  ");
+      return;
+    }
 
     for (uint16_t y = y_start_pix; y < y_start_pix + fontHeader->fontHeight; y++)
     {
@@ -149,6 +154,11 @@ newline:
       cursorY--;
       Scroll();
     }
+  }
+
+  void NewLine()
+  {
+    PutChar('\n');
   }
 
   void Print(const char *string)
@@ -203,7 +213,12 @@ newline:
   {
     va_list argp;
     va_start(argp, format);
+    Printfa(format, argp);
+    va_end(argp);
+  }
 
+  void Printfa(const char *format, va_list argp)
+  {
     while (*format != '\0') {
       if (*format == '%') {
         format++;
@@ -219,7 +234,6 @@ newline:
       }
       format++;
     }
-    va_end(argp);
   }
 
   void SetCursor(uint16_t x, uint16_t y)
@@ -297,6 +311,11 @@ newline:
   void SetBackColor(Color color)
   {
     backColor = color;
+  }
+
+  Color GetFrontColor()
+  {
+    return frontColor;
   }
 
   Framebuffer *GetFramebuffer()
