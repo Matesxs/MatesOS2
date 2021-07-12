@@ -26,8 +26,7 @@ OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
 all: $(ISO_IMAGE)
 
 init:
-	sudo apt-get install gcc nasm gdb
-	sudo apt-get install qemu qemu-system-common ovmf
+	sudo apt-get install gcc nasm gdb qemu qemu-system ovmf xorriso
 
 debug: CFLAGS += -g
 debug: clean_kernel kernel
