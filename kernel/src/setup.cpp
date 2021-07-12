@@ -15,7 +15,7 @@
 #include "acpi/acpi.hpp"
 #include "cpu/cpuid/features.hpp"
 #include "cpu/cpuid/cpuInfo.hpp"
-#include "utils/driver.hpp"
+#include "drivers/driver.hpp"
 #include "lib/stmm.hpp"
 
 void printCPUInfo()
