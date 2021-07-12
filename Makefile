@@ -26,7 +26,7 @@ OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
 all: $(ISO_IMAGE)
 
 init:
-	sudo apt-get install gcc nasm gdb qemu qemu-system ovmf xorriso
+	sudo apt-get install gcc nasm gdb qemu qemu-system ovmf xorriso ovmf
 
 debug: CFLAGS += -g
 debug: clean_kernel kernel
@@ -63,16 +63,16 @@ $(ISO_IMAGE): limine kernel
 	rm -rf iso_root
 
 run: image
-	qemu-system-x86_64 -M q35 -m 2G -cdrom $(ISO_IMAGE)
+	qemu-system-x86_64 -M q35 -m 2G -cdrom $(ISO_IMAGE) -serial pty -serial pty -monitor stdio
 
 run_efi: image
-	qemu-system-x86_64 -machine q35 -cdrom $(ISO_IMAGE) -m 2G -bios /usr/share/ovmf/OVMF.fd
+	qemu-system-x86_64 -machine q35 -cdrom $(ISO_IMAGE) -m 2G -bios /usr/share/ovmf/OVMF.fd -serial pty -serial pty -monitor stdio
 
 run_debug: debug image
-	qemu-system-x86_64 -s -S -M q35 -m 2G -cdrom $(ISO_IMAGE)
+	qemu-system-x86_64 -s -S -M q35 -m 2G -cdrom $(ISO_IMAGE) -serial pty -monitor stdio
 
 run_efi_debug: debug image
-	qemu-system-x86_64 -s -S -machine q35 -cdrom $(ISO_IMAGE) -m 2G -bios /usr/share/ovmf/OVMF.fd
+	qemu-system-x86_64 -s -S -machine q35 -cdrom $(ISO_IMAGE) -m 2G -bios /usr/share/ovmf/OVMF.fd -serial pty -serial pty -monitor stdio
 
 clean_kernel:
 	rm -rf $(BUILDDIR)

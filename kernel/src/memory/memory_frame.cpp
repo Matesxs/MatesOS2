@@ -6,6 +6,7 @@
 #include "bitmap.hpp"
 #include "memory.hpp"
 #include "../stivale/stivale_tags_structure.hpp"
+#include "../panic.hpp"
 
 namespace memory
 {
@@ -23,6 +24,7 @@ namespace memory
 
     stivale2_mmap_entry *memmap = tags->memory_tag->memmap;
     size_t entries = tags->memory_tag->entries;
+    if (entries == 0) Panic("No memory entries found");
 
     stivale2_mmap_entry *largestPrimary = NULL;
     size_t largestPageCount = 0;
@@ -41,6 +43,8 @@ namespace memory
 
       s_memory_total_size += num_of_pages * PAGE_SIZE;
     }
+
+    if (largestPrimary == NULL) Panic("No memory entries found");
 
     s_pageframemap.BitmapInit((uint8_t*)largestPrimary->base, s_memory_total_size / PAGE_SIZE / BITMAP_SCALE);
     PageframeReserve(0, s_memory_total_size / PAGE_SIZE);

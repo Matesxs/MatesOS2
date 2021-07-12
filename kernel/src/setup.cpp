@@ -58,6 +58,7 @@ void setupMemory()
   memory::IdentityMapSize((void*)fb.base_address, framebufferSize);
   memory::SetWritableSize((void*)fb.base_address, framebufferSize);
   memory::PageTable *l4_table = memory::GetL4Table();
+
   asm("mov %0, %%cr3" : : "r"(l4_table));
 
   logging::log(logging::SUCCESS, "Paging setup");

@@ -6,6 +6,7 @@
 #include "../lib/stmm.hpp"
 #include "memory.hpp"
 #include "../stivale/stivale_tags_structure.hpp"
+#include "../panic.hpp"
 
 namespace memory
 {
@@ -25,7 +26,11 @@ namespace memory
 
   void InitPaging()
   {
+    if (l4_page != NULL) Panic("Paging already initialized");
+
     l4_page = (PageTable*)RequestPage();
+    if (l4_page == NULL) Panic("Failed to allocate page for L4 page");
+
     memset((void*)l4_page, 0, PAGE_SIZE);
 
     void* kernel_physical_start = KERNEL_PHYSICAL_ADDRESS(&_KernelStart);
@@ -78,6 +83,8 @@ namespace memory
     {
       // page is not present
       pagetable_l3 = (PageTable*)RequestPage();
+      if (pagetable_l3 == NULL) Panic("Memory map - Failed to allocate page for L3 page");
+
       memset(pagetable_l3, 0, PAGE_SIZE);
       entry.SetAddress((uint64_t)pagetable_l3 >> 12);
       entry.SetFlag(PAGE_DIRECTORY_PRESENT, true);
@@ -94,6 +101,8 @@ namespace memory
     {
       // page not present
       pagetable_l2 = (PageTable*)RequestPage();
+      if (pagetable_l2 == NULL) Panic("Memory map - Failed to allocate page for L2 page");
+
       memset(pagetable_l2, 0, PAGE_SIZE);
       entry.SetAddress((uint64_t)pagetable_l2 >> 12);
       entry.SetFlag(PAGE_DIRECTORY_PRESENT, true);
@@ -110,6 +119,8 @@ namespace memory
     {
       // page not present
       pagetable_l1 = (PageTable*)RequestPage();
+      if (pagetable_l1 == NULL) Panic("Memory map - Failed to allocate page for L1 page");
+
       memset(pagetable_l1, 0, PAGE_SIZE);
       entry.SetAddress((uint64_t)pagetable_l1 >> 12);
       entry.SetFlag(PAGE_DIRECTORY_PRESENT, true);
