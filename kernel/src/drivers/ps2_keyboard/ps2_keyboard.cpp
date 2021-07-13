@@ -54,7 +54,7 @@ namespace driver
   bool specialSet = false;
   void PS2KeyboardDriver::handleScancode(uint8_t scancode)
   {
-    logging::log(logging::INFO, "keybord interrupt handler called with scancode: %d", scancode);
+    // logging::log(logging::INFO, "keybord interrupt handler called with scancode: %d", scancode);
     if (specialSet)
     {
       // logging::log(logging::INFO, "Specialset activated");
@@ -87,49 +87,47 @@ namespace driver
     {
       case SPECIAL_PREFIX:
         specialSet = true;
-        return;
+        break;
 
       case LeftShift:
         isLeftShiftPressed = true;
-        return;
+        break;
 
       case LeftShift + 0x80:
         isLeftShiftPressed = false;
-        return;
+        break;
 
       case RightShift:
         isRightShiftPressed = true;
-        return;
+        break;
 
       case RightShift + 0x80:
         isRightShiftPressed = false;
-        return;
+        break;
 
       case CapsLock:
         capslockActivated = !capslockActivated;
-        return;
+        break;
 
       case Escape:
-        // FACP::Shutdown();
-        return;
+        break;
 
       case Enter:
-        // g_BasicRenderer.NewLine();
-        return;
+        break;
 
       case Spacebar:
-        // g_BasicRenderer.PutChar(' ');
-        return;
+        break;
 
       case BackSpace:
-        // g_BasicRenderer.ClearChar();
-        return;
-    }
+        break;
 
-    char ascii = QWERTYKeyboard::Translate(scancode, isLeftShiftPressed | isRightShiftPressed | capslockActivated);
-    if (ascii != 0)
-    {
-      logging::log(logging::INFO, "Scancode translated to %c\n", ascii);
+      default:
+        char ascii = QWERTYKeyboard::Translate(scancode, isLeftShiftPressed | isRightShiftPressed | capslockActivated);
+
+        if (ascii != 0)
+        {
+          // logging::log(logging::INFO, "Scancode translated to %c", ascii);
+        }
     }
   }
 }
