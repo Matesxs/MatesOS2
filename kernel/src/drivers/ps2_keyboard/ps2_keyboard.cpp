@@ -13,12 +13,16 @@ const char driver_name[] = "ps2_keyboard";
 
 namespace driver
 {
-  PS2KeyboardDriver::PS2KeyboardDriver()
-  {
-  }
+  PS2KeyboardDriver::PS2KeyboardDriver() {}
 
   PS2KeyboardDriver::~PS2KeyboardDriver()
   {
+    asm("cli");
+
+    interrupts::RemoveHandler(IRQ_PIC_OFFSET + IO_IRQ_KEYBOARD);
+    IO::io_pic_irq_disable(IO_IRQ_KEYBOARD);
+
+    asm("sti");
   }
 
   bool PS2KeyboardDriver::activate()
