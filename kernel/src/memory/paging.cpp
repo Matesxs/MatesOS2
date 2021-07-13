@@ -37,7 +37,7 @@ namespace memory
     void* kernel_physical_end = KERNEL_PHYSICAL_ADDRESS(&_KernelEnd);
     void* kernel_writable_physical_start = KERNEL_PHYSICAL_ADDRESS(&_WritableStart);
     void* kernel_writable_physical_end = KERNEL_PHYSICAL_ADDRESS(&_WritableEnd);
-    uint64_t kernel_virtual_base = (uint64_t)&_virtual_base;
+    uint64_t kernel_virtual_base = (uint64_t)&_KernelBase;
 
     // Map kernel
     for(uint64_t ptr = (uint64_t)kernel_physical_start; ptr < (uint64_t)kernel_physical_end; ptr += PAGE_SIZE)

@@ -17,6 +17,7 @@
 #include "cpu/cpuid/cpuInfo.hpp"
 #include "drivers/driver.hpp"
 #include "lib/stmm.hpp"
+#include "memory/heap.hpp"
 
 void printCPUInfo()
 {
@@ -53,15 +54,22 @@ void setupMemory()
   memory::InitPageframe();
   memory::PageframeReserveSize((void*)fb.base_address, framebufferSize);
   logging::log(logging::SUCCESS, "Pageframe loaded");
+  logging::log(logging::INFOPlus, "Total memory: %S\n", memory::GetTotalMemory());
+  logging::log(logging::INFOPlus, "Free memory:  %S\n", memory::GetFreeMemory());
+  logging::log(logging::INFOPlus, "Reserved memory: %S\n", memory::GetReservedMemory());
 
   memory::InitPaging();
   memory::IdentityMapSize((void*)fb.base_address, framebufferSize);
   memory::SetWritableSize((void*)fb.base_address, framebufferSize);
   memory::PageTable *l4_table = memory::GetL4Table();
+  if (l4_table == NULL) Panic("No L4 table returned");
 
   asm("mov %0, %%cr3" : : "r"(l4_table));
+  logging::log(logging::SUCCESS, "Paging initialized");
 
-  logging::log(logging::SUCCESS, "Paging setup");
+  memory::CreateHeap((void*)HEAP_BASE, 0x10);
+  logging::log(logging::SUCCESS, "Heap Initialized");
+  logging::log(logging::INFOPlus, "Heap pages: %d, Start size: %S\n", memory::GetHeapPages(), memory::GetHeapPages() * PAGE_SIZE);
 }
 
 void setupACPI()
@@ -122,7 +130,10 @@ void preSetup(stivale2_struct *stivale2_struct)
   BasicRenderer::ClearScreen();
   BasicRenderer::SetCursor(4, 0);
 
+  Framebuffer *fb = BasicRenderer::GetFramebuffer();
   logging::log(logging::SUCCESS, "Basic Renderer initialized");
+  logging::log(logging::INFOPlus, "Addr: %x, Size: %S\n", (uint64_t)fb, fb->pitch * fb->height);
+  logging::log(logging::INFOPlus, "Resolution: %dx%d, Bpp: %d\n", fb->width, fb->height, fb->bpp);
 
   CPU::feature::cpu_enable_features();
   logging::log(logging::SUCCESS, "CPU Info loaded");
@@ -146,4 +157,6 @@ void postSetup()
 {
   if (driver::g_DriverManager.get_num_of_drivers() > 0) driver::g_DriverManager.activate_all();
   else logging::log(logging::WARNING, "No drivers to load");
+
+  memory::WalkHeap();
 }

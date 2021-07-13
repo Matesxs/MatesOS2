@@ -8,6 +8,7 @@
 #include "../helpers.hpp"
 #include "memory_frame.hpp"
 #include "paging.hpp"
+#include "heap.hpp"
 
 namespace memory
 {

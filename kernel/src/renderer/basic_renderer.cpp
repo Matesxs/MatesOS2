@@ -209,6 +209,35 @@ newline:
     Print(buf + i);
   }
 
+  static void PrintSize(size_t size)
+  {
+    if (size / 1099511627776 > 1)
+    {
+      PrintDec(size / 1099511627776);
+      Print("TB");
+    }
+    else if (size / 1073741824 > 1)
+    {
+      PrintDec(size / 1073741824);
+      Print("GB");
+    }
+    else if (size / 1048576 > 1)
+    {
+      PrintDec(size / 1048576);
+      Print("MB");
+    }
+    else if (size / 1024 > 1)
+    {
+      PrintDec(size / 1024);
+      Print("KB");
+    }
+    else
+    {
+      PrintDec(size);
+      Print("B");
+    }
+  }
+
   void Printf(const char *format, ...)
   {
     va_list argp;
@@ -228,6 +257,8 @@ newline:
           PrintDec(va_arg(argp, size_t));
         } else if (*format == 's') {
           Print(va_arg(argp, char*));
+        } else if (*format == 'S') {
+          PrintSize(va_arg(argp, size_t));
         }
       } else {
         PutChar(*format);

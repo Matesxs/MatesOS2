@@ -13,7 +13,7 @@
 #define SET_BIT(n, bit, value)	((n) ^ (-(value) ^ (n)) & 1 << (bit))
 #define GET_BIT(n, bit)			((1 << (bit) & (n)) > 0)
 
-#define KERNEL_PHYSICAL_ADDRESS(virtual_address)	((void*)((unsigned long long)(virtual_address) - ((unsigned long long)&_virtual_base)))
+#define KERNEL_PHYSICAL_ADDRESS(virtual_address)	((void*)((unsigned long long)(virtual_address) - ((unsigned long long)&_KernelBase)))
 
 uint8_t checksum(const char *addr, size_t size) noexcept;
 
