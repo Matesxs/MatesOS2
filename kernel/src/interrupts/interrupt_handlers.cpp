@@ -7,7 +7,7 @@
 #include "../logging.hpp"
 #include "../io/io.hpp"
 #include "../drivers/driver.hpp"
-#include "../drivers/ps2_keyboard.hpp"
+#include "../drivers/ps2_keyboard/ps2_keyboard.hpp"
 #include "stddef.h"
 
 namespace interrupts

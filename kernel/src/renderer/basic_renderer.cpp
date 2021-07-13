@@ -259,6 +259,8 @@ newline:
           Print(va_arg(argp, char*));
         } else if (*format == 'S') {
           PrintSize(va_arg(argp, size_t));
+        } else if (*format == 'c') {
+          PutChar((char)va_arg(argp, int));
         }
       } else {
         PutChar(*format);

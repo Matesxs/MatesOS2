@@ -6,7 +6,7 @@
 #define MATESOS2_PS2_KEYBOARD_HPP
 
 #include "stdint.h"
-#include "driver.hpp"
+#include "../driver.hpp"
 
 namespace driver
 {

@@ -17,7 +17,7 @@
 #include "cpu/cpuid/cpuInfo.hpp"
 #include "drivers/driver.hpp"
 #include "lib/stmm.hpp"
-#include "drivers/ps2_keyboard.hpp"
+#include "drivers/ps2_keyboard/ps2_keyboard.hpp"
 #include "io/io.hpp"
 
 void printCPUInfo()
