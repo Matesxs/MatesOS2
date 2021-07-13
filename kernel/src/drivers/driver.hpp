@@ -13,7 +13,7 @@ namespace driver
     ~Driver();
     virtual bool activate();
     virtual bool deactivate();
-    char *name = nullptr;
+    virtual const char *getName();
   };
 
   class DriverManager

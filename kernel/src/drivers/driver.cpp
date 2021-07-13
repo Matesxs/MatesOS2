@@ -11,6 +11,11 @@ namespace driver
 
   Driver::~Driver(){}
 
+  const char *Driver::getName()
+  {
+    return "Not defined";
+  }
+
   bool Driver::activate()
   {
     return false;
@@ -36,7 +41,13 @@ namespace driver
     {
       if (drivers[i] != NULL)
       {
-        if (!drivers[i]->activate()) failed = true;
+        if (drivers[i]->activate())
+        {
+          logging::log(logging::INFOPlus, "Driver <%s> loaded", drivers[i]->getName());
+          logging::newln();
+        }
+        else
+          failed = true;
       }
     }
 
@@ -48,7 +59,7 @@ namespace driver
   {
     if (num_of_drivers == DRIVER_NUM)
     {
-      logging::log(logging::WARNING, "Unable to add %s driver to list of drivers, limit of %d drivers reached!", driver->name, DRIVER_NUM);
+      logging::log(logging::WARNING, "Unable to add %s driver to list of drivers, limit of %d drivers reached!", driver->getName(), DRIVER_NUM);
       return;
     }
 
@@ -67,7 +78,7 @@ namespace driver
     if (num_of_drivers == 0) return NULL;
     for (uint64_t i = 0; i < num_of_drivers; i++)
     {
-      if (strcmp(name, drivers[i]->name) == 0) return drivers[i];
+      if (strcmp(name, drivers[i]->getName()) == 0) return drivers[i];
     }
 
     return NULL;

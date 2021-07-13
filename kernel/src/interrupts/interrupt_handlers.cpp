@@ -4,36 +4,41 @@
 
 #include "interrupt_handlers.hpp"
 #include "../panic.hpp"
-#include "interrupt.hpp"
 #include "../logging.hpp"
 #include "../io/io.hpp"
+#include "../drivers/driver.hpp"
+#include "../drivers/ps2_keyboard.hpp"
+#include "stddef.h"
 
 namespace interrupts
 {
-  struct interrupt_frame;
-
-  __attribute__((interrupt, noreturn)) static void PageFault_Handler(interrupt_frame *frame, uint64_t error_code)
+  __attribute__((interrupt, noreturn)) void PageFault_Handler(interrupt_frame *frame, uint64_t error_code)
   {
     Panic("Page Fault Detected");
     while (true) asm("hlt");
   }
 
-  __attribute__((interrupt, noreturn)) static void DoubleFault_Handler(interrupt_frame *frame, uint64_t error_code)
+  __attribute__((interrupt, noreturn)) void DoubleFault_Handler(interrupt_frame *frame, uint64_t error_code)
   {
     Panic("Double Fault Detected");
     while (true) asm("hlt");
   }
 
-  __attribute__((interrupt, noreturn)) static void GPFault_Handler(interrupt_frame *frame, uint64_t error_code)
+  __attribute__((interrupt, noreturn)) void GPFault_Handler(interrupt_frame *frame, uint64_t error_code)
   {
     Panic("General Protection Fault Detected");
     while (true) asm("hlt");
   }
 
-  __attribute__((interrupt)) static void KeyboardInt_Handler(interrupt_frame *frame)
+  __attribute__((interrupt)) void KeyboardInt_Handler(interrupt_frame *frame)
   {
     uint8_t scanCode = IO::inb(0x60);
-    logging::log(logging::INFO, "keybord interrupt handler called with scancode: %d", scanCode);
+    driver::PS2KeyboardDriver *keyboardDriver = (driver::PS2KeyboardDriver*)driver::g_DriverManager.get_by_name("ps2_keyboard");
+    if (keyboardDriver != NULL)
+    {
+      keyboardDriver->handleScancode(scanCode);
+    }
+
     IO::io_pic_end_master();
   }
 
@@ -43,14 +48,5 @@ namespace interrupts
     AddHandler((void*)DoubleFault_Handler, 0x8, IDT_TA_TrapGate, 0x08);
     AddHandler((void*)GPFault_Handler, 0xD, IDT_TA_TrapGate, 0x08);
     logging::log(logging::SUCCESS, "Exception handlers initialized");
-  }
-
-  void InitPICHandler()
-  {
-    AddHandler((void*)KeyboardInt_Handler, IRQ_PIC_OFFSET + IO_IRQ_KEYBOARD, IDT_TA_InterruptGate, 0x08);
-    IO::io_pic_irq_enable(IO_IRQ_KEYBOARD);
-
-    IO::io_pic_remap();
-    logging::log(logging::SUCCESS, "PIC handlers initialized");
   }
 }

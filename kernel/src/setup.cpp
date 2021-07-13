@@ -17,7 +17,8 @@
 #include "cpu/cpuid/cpuInfo.hpp"
 #include "drivers/driver.hpp"
 #include "lib/stmm.hpp"
-#include "memory/heap.hpp"
+#include "drivers/ps2_keyboard.hpp"
+#include "io/io.hpp"
 
 void printCPUInfo()
 {
@@ -41,8 +42,8 @@ void setupInterrupts()
 {
   interrupts::Init();
   interrupts::InitExceptions();
-  interrupts::InitPICHandler();
   interrupts::Load();
+  IO::io_pic_remap();
   logging::log(logging::SUCCESS, "Interrupts initialized");
 }
 
@@ -155,6 +156,8 @@ void setupMain()
 
 void postSetup()
 {
+  driver::g_DriverManager.add_driver(new driver::PS2KeyboardDriver());
+
   if (driver::g_DriverManager.get_num_of_drivers() > 0) driver::g_DriverManager.activate_all();
   else logging::log(logging::WARNING, "No drivers to load");
 

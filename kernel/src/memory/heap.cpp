@@ -226,6 +226,11 @@ void *operator new[](size_t s)
   return memory::calloc(s);
 }
 
+void *operator new(size_t n, void *p)
+{
+  return p;
+}
+
 void operator delete(void *p)
 {
   memory::free(p);
