@@ -34,6 +34,8 @@ namespace driver
     IO::io_pic_irq_enable(IO_IRQ_KEYBOARD);
 
     asm("sti");
+
+    logging::log(logging::SUCCESS, "PS2Keyboard Driver loaded");
     return true;
   }
 

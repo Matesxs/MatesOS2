@@ -3,6 +3,8 @@
 #include "../../memory/memory.hpp"
 #include "../../logging.hpp"
 #include "../../lib/ststr.hpp"
+#include "../../drivers/driver.hpp"
+#include "../../drivers/ahci.hpp"
 
 // #define DEBUG
 
@@ -116,6 +118,7 @@ namespace PCI
               switch (pciDeviceHeader->ProgIF)
               {
                 case SATAPI_AHCI_1_0_Device: // AHCI 1.0 device
+                  driver::g_DriverManager.add_driver(new AHCI::AHCIDriver(pciDeviceHeader));
                   break;
               }
               break;

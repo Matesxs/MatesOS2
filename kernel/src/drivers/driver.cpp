@@ -41,12 +41,7 @@ namespace driver
     {
       if (drivers[i] != NULL)
       {
-        if (drivers[i]->activate())
-        {
-          logging::log(logging::INFOPlus, "Driver <%s> loaded", drivers[i]->getName());
-          logging::newln();
-        }
-        else
+        if (!drivers[i]->activate())
         {
           failed = true;
           logging::log(logging::WARNING, "Driver <%s> failed to load", drivers[i]->getName());
