@@ -19,6 +19,7 @@
 #include "lib/stmm.hpp"
 #include "drivers/ps2_keyboard/ps2_keyboard.hpp"
 #include "io/io.hpp"
+#include "acpi/facp/facp.hpp"
 
 void printCPUInfo()
 {
@@ -111,6 +112,7 @@ void setupACPI()
 
   ACPI::FACPHeader *facp = (ACPI::FACPHeader*)FindTable(rootHeader, (char*)"FACP");
   if (facp == NULL) return Panic("FACP Table not found");
+  FACP::InitFACP(facp);
 }
 
 void preSetup(stivale2_struct *stivale2_struct)
