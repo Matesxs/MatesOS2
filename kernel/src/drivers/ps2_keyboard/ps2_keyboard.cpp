@@ -8,6 +8,7 @@
 #include "../../interrupts/interrupt_handlers.hpp"
 #include "../../io/io.hpp"
 #include "keyboard_scancodes.hpp"
+#include "../../acpi/facp/facp.hpp"
 
 const char driver_name[] = "ps2_keyboard";
 
@@ -68,6 +69,7 @@ namespace driver
           break;
 
         case SPECIAL_HOME:
+          FACP::Reboot();
           break;
 
         case SPECIAL_PGUP:
@@ -77,6 +79,7 @@ namespace driver
           break;
 
         case SPECIAL_END:
+          FACP::Shutdown();
           break;
 
         case SPECIAL_PGDN:

@@ -47,7 +47,10 @@ namespace driver
           logging::newln();
         }
         else
+        {
           failed = true;
+          logging::log(logging::WARNING, "Driver <%s> failed to load", drivers[i]->getName());
+        }
       }
     }
 
