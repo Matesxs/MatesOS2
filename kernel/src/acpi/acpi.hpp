@@ -96,6 +96,12 @@ namespace ACPI
     uint8_t RESET_VALUE;
   } __attribute__((packed));
 
+  struct MCFGHeader
+  {
+    SDTHeader Header;
+    uint64_t Reserved;
+  } __attribute__((packed));
+
   void *FindXSDTTable(SDTHeader *sdtHeader, char *signature);
   int EnumXSDT(SDTHeader *sdtHeader);
   void* FindRSDTTable(SDTHeader *sdtHeader, char *signature);

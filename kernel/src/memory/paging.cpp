@@ -154,6 +154,11 @@ namespace memory
     }
   }
 
+  void IdentityMap(void *addr)
+  {
+    MemoryMap(addr, addr);
+  }
+
   void IdentityMapSize(void *addr, size_t size)
   {
     IdentityMap(addr, NEAREST_PAGE_COUNT(size));

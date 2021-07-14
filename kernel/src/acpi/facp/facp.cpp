@@ -90,7 +90,7 @@ namespace FACP
 
     logging::log(logging::SUCCESS, "FACP Initialized");
     logging::log(logging::INFOPlus, "FACP Flags: %b\n", facp->Flags);
-    logging::log(logging::INFOPlus, "SD Info: %d\n", SCI_EN);
+    logging::log(logging::INFOPlus, "Shutdown enabled: %d, SD addr1: %x, SD addr2: %x, SD value1: %d, SD value2: %d\n", SCI_EN, PM1a_CNT, PM1b_CNT, SLP_TYPa | SLP_EN, SLP_TYPb | SLP_EN);
 
     const char *addrSpace;
     switch (facp->RESET_REG.AddressSpace) {
@@ -108,13 +108,13 @@ namespace FACP
     }
 
     reset_flag = GET_BIT(facp->Flags, 10);
-    logging::log(logging::INFOPlus, "Reset addr: %x, Reset value: %d, Reset flag: %d, Address space: %s\n", facp->RESET_REG.Address, facp->RESET_VALUE, reset_flag, addrSpace);
+    logging::log(logging::INFOPlus, "Reset enabled: %d, Reset addr: %x, Reset value: %d, Address space: %s\n", reset_flag, facp->RESET_REG.Address, facp->RESET_VALUE, addrSpace);
   }
 
   __attribute__((noreturn))
   void Shutdown()
   {
-    if (SCI_EN == 1) 
+    if (SCI_EN)
     {
       IO::outw(PM1a_CNT, SLP_TYPa | SLP_EN);
       if (PM1b_CNT != 0)

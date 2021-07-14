@@ -20,6 +20,7 @@
 #include "drivers/ps2_keyboard/ps2_keyboard.hpp"
 #include "io/io.hpp"
 #include "acpi/facp/facp.hpp"
+#include "acpi/pci/pci.hpp"
 
 void printCPUInfo()
 {
@@ -110,9 +111,15 @@ void setupACPI()
 
   if (rootHeader == NULL) return Panic("Root ACPI header not found");
 
-  ACPI::FACPHeader *facp = (ACPI::FACPHeader*)FindTable(rootHeader, (char*)"FACP");
+  ACPI::FACPHeader *facp = (ACPI::FACPHeader*)FindTable(rootHeader, "FACP");
   if (facp == NULL) return Panic("FACP Table not found");
   FACP::Init(facp);
+
+  ACPI::MCFGHeader *mcfg = (ACPI::MCFGHeader*)FindTable(rootHeader, "MCFG");
+  if (mcfg != NULL)
+  {
+    PCI::EnumeratePCI(mcfg);
+  }
 }
 
 void preSetup(stivale2_struct *stivale2_struct)

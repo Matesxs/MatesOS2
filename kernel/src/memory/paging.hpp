@@ -25,6 +25,7 @@ namespace memory
   void MemoryMap(void* virtual_addr, void* phys_addr);
   void MemoryMap(void* virtual_addr, void* phys_addr, size_t pages);
   void IdentityMap(void *addr, size_t pages);
+  void IdentityMap(void *addr);
   void IdentityMapSize(void *addr, size_t size);
 
   void SetAttribute(void* virtual_address, size_t pages, PageDirectoryFlag attribute, bool enabled);
