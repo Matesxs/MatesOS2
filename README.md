@@ -19,7 +19,9 @@ It is still not finished and here is lack of support for hardware run of this OS
 - Block based heap
 - Simple exception handling
 - Custom GDT
-- PS/2 Keyboard support (WIP)
+- PS/2 Keyboard support
+- FACP
+- PCI
 
 ## Developement environment
 ### Software
