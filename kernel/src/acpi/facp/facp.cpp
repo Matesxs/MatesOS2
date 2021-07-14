@@ -25,7 +25,7 @@ namespace FACP
     return a | (b << 8) | (c << 16) | (d << 24);
   }
 
-  void InitFACP(ACPI::FACPHeader *facp)
+  void Init(ACPI::FACPHeader *facp)
   {
     g_FACPHeader = facp;
 

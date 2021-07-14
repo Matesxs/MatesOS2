@@ -6,7 +6,7 @@
 
 namespace FACP
 {
-  void InitFACP(ACPI::FACPHeader *facp);
+  void Init(ACPI::FACPHeader *facp);
   void Shutdown();
   void Reboot();
 

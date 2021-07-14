@@ -112,7 +112,7 @@ void setupACPI()
 
   ACPI::FACPHeader *facp = (ACPI::FACPHeader*)FindTable(rootHeader, (char*)"FACP");
   if (facp == NULL) return Panic("FACP Table not found");
-  FACP::InitFACP(facp);
+  FACP::Init(facp);
 }
 
 void preSetup(stivale2_struct *stivale2_struct)
