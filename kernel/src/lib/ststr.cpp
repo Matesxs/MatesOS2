@@ -19,3 +19,14 @@ int strcmp(const char *l, const char *r, size_t len)
   }
   return 0;
 }
+
+size_t strlen(const char *s)
+{
+  size_t n = 0;
+  while (*s)
+  {
+    n++;
+    s++;
+  }
+  return n;
+}

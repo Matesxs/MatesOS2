@@ -9,5 +9,6 @@
 
 int strcmp(const char *l, const char *r);
 int strcmp(const char *l, const char *r, size_t len);
+size_t strlen(const char *s);
 
 #endif //MATESOS2_STSTR_HPP
