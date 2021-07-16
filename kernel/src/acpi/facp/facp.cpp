@@ -3,6 +3,7 @@
 #include "../../logging.hpp"
 #include "../../io/io.hpp"
 #include "../../helpers.hpp"
+#include "../../memory/memory.hpp"
 
 namespace FACP
 {
@@ -114,6 +115,8 @@ namespace FACP
   __attribute__((noreturn))
   void Shutdown()
   {
+    asm volatile ("cli");
+
     if (SCI_EN)
     {
       IO::outw(PM1a_CNT, SLP_TYPa | SLP_EN);
@@ -138,7 +141,8 @@ namespace FACP
   __attribute__((noreturn))
   void Reboot()
   {
-    // Check if reset via FADT RESET_REG is supported
+    asm volatile ("cli");
+
     if (reset_flag)
     {
       switch (g_FACPHeader->RESET_REG.AddressSpace)
@@ -148,6 +152,7 @@ namespace FACP
           break;
 
         case ACPI::MMIO:
+          memory::IdentityMap((void*)g_FACPHeader->RESET_REG.Address);
           *((volatile uint8_t *) ((uintptr_t)g_FACPHeader->RESET_REG.Address)) = g_FACPHeader->RESET_VALUE;
           break;
 

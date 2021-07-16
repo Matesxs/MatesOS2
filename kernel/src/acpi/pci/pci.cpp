@@ -70,7 +70,7 @@ namespace PCI
 
   void EnumeratePCI(ACPI::MCFGHeader *mcfg)
   {
-    logging::log(logging::INFO, "PCI initializing");
+    logging::log(logging::INFO, "PCI Enumeration");
 
     if (checksum((char*)&mcfg->Header, mcfg->Header.Length)) Panic("Failed SDT header checksum in MCFG header");
     if (mcfg->Header.Length < sizeof(ACPI::SDTHeader)) Panic("Impossible size of SDT header in MCFG header");
@@ -101,37 +101,20 @@ namespace PCI
     {
       PCIDeviceheader *pciDeviceHeader = s_pci_devices[i];
 
-      logging::log(logging::INFOPlus, "%s / %s / %s / %s / %s",
-                   GetVendorName(pciDeviceHeader->VendorID),
-                   GetDeviceName(pciDeviceHeader->VendorID, pciDeviceHeader->DeviceID),
-                   DeviceClasses[pciDeviceHeader->Class],
-                   GetSubclassName(pciDeviceHeader->Class, pciDeviceHeader->Subclass),
-                   GetProgramIFName(pciDeviceHeader->Class, pciDeviceHeader->Subclass, pciDeviceHeader->ProgIF));
+      logging::log(logging::INFOPlus, "%s / %s / %s / %s",
+                   GetVendorString(pciDeviceHeader),
+                   GetClassString(pciDeviceHeader),
+                   GetSubclassString(pciDeviceHeader),
+                   GetProgIFString(pciDeviceHeader));
       logging::newln();
 
-      switch (pciDeviceHeader->Class)
-      {
+      switch (pciDeviceHeader->Class) {
         case DC_MassStorageController:
-          switch (pciDeviceHeader->Subclass)
-          {
+          switch (pciDeviceHeader->Subclass) {
             case MSCSC_SATA: // Serial ATA
-              switch (pciDeviceHeader->ProgIF)
-              {
+              switch (pciDeviceHeader->ProgIF) {
                 case SATAPI_AHCI_1_0_Device: // AHCI 1.0 device
                   driver::g_DriverManager.add_driver(new AHCI::AHCIDriver(pciDeviceHeader));
-                  break;
-              }
-              break;
-          }
-          break;
-
-        case DC_SerialBusController:
-          switch (pciDeviceHeader->Subclass)
-          {
-            case SBCSC_USBController:
-              switch (pciDeviceHeader->ProgIF)
-              {
-                default:
                   break;
               }
               break;

@@ -51,7 +51,7 @@ namespace PCI
   enum NetworkControllerSubclass
   {
     NCSC_EthernetController = 0x00,
-    NCSC_TokenRongController = 0x01,
+    NCSC_TokenRingController = 0x01,
     NCSC_FDDIController = 0x02,
     NCSC_ATMController = 0x03,
     NCSC_ISDNController = 0x04,
@@ -167,6 +167,47 @@ namespace PCI
     SBCSC_SERCOSInterface = 0x08,
     SBCSC_CANBus = 0x09,
     SBCSC_Other = 0x80
+  };
+
+  enum WirelessControllerSubclass
+  {
+    WCSC_iRDACompatibleController = 0x00,
+    WCSC_ConsumerIRController = 0x01,
+    WCSC_RFController = 0x10,
+    WCSC_BluetoothController = 0x11,
+    WCSC_BroadbandController = 0x12,
+    WCSC_EthernetController802_1a = 0x20,
+    WCSC_EthernetController802_1b = 0x21,
+    WCSC_Other = 0x80
+  };
+
+  enum IntelligentControllerSubclas
+  {
+    ICSC_I20 = 0x00,
+  };
+
+  enum SatelliteCommunicationControllerSubclass
+  {
+    SCCSC_SatelliteTVController = 0x01,
+    SCCSC_SatelliteAudioController = 0x02,
+    SCCSC_SatelliteVoiceController = 0x03,
+    SCCSC_SatelliteDataController = 0x04
+  };
+
+  enum EncryptionControllerSubclass
+  {
+    ECSC_Network_Computing_Encrpytion_Decryption = 0x00,
+    ECSC_EntertainmentEncryption_Decryption = 0x10,
+    ECSC_Other = 0x80
+  };
+
+  enum SignalProcessingControllerSubclass
+  {
+    SPCSC_DPIOModules = 0x00,
+    SPCSC_PerformanceCounters = 0x01,
+    SPCSC_CommunicationSynchronizer = 0x10,
+    SPCSC_SignalProcessingManagement = 0x20,
+    SPCSC_Other = 0x80
   };
 
   enum SATAProgramInterface

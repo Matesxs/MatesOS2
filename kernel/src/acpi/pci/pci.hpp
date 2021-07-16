@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdint.h"
+#include "stdint.h"
 #include "../acpi.hpp"
 #include "pci_enum.hpp"
 
@@ -54,12 +55,37 @@ namespace PCI
     uint32_t Reserved;
   } __attribute__((packed));
 
+  struct PCIClassIdentifier {
+    uint8_t		classID;
+    const char*	name;
+  };
+  struct PCISublassIdentifier {
+    uint8_t		classID;
+    uint8_t		subclassID;
+    const char*	name;
+  };
+  struct PCIProgrammingInterfaceIdentifier {
+    uint8_t		classID;
+    uint8_t		subclassID;
+    uint8_t		program_ifID;
+    const char*	name;
+  };
+
+  struct PCIVendorIdentifier {
+    uint16_t	vendorID;
+    const char*	name;
+  };
+
+  extern struct PCIClassIdentifier g_pci_classes[];
+  extern struct PCISublassIdentifier g_pci_subclasses[];
+  extern struct PCIProgrammingInterfaceIdentifier g_pci_progifs[];
+  extern struct PCIVendorIdentifier g_pci_vendors[];
+
   void EnumeratePCI(ACPI::MCFGHeader *mcfg);
   PCIDeviceheader *EnumerateFunction(ACPI::MCFGHeader *mcfg, uint64_t entryIndex, uint64_t busIndex, uint64_t deviceIndex, uint64_t functionIndex);
 
-  extern const char *DeviceClasses[];
-  const char *GetVendorName(uint16_t vendorID);
-  const char *GetDeviceName(uint16_t vendorID, uint16_t deviceID);
-  const char *GetSubclassName(uint8_t classCode, uint8_t subclassCode);
-  const char *GetProgramIFName(uint8_t classCode, uint8_t subclassCode, uint8_t progIF);
+  const char* GetClassString(PCIDeviceheader* pci_header);
+  const char* GetSubclassString(PCIDeviceheader* pci_header);
+  const char* GetProgIFString(PCIDeviceheader* pci_header);
+  const char* GetVendorString(PCIDeviceheader* pci_header);
 }
