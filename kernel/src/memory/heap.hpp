@@ -26,6 +26,7 @@ namespace memory
 
   void *malloc(size_t size);
   void *calloc(size_t size);
+  void *realloc(void *addr, size_t size);
   void free(void *address);
 
   bool ExpandHeap(size_t length);

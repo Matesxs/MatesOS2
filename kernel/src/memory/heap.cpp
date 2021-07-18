@@ -57,6 +57,8 @@ namespace memory
     HeapSegHdr *hdr = (HeapSegHdr*)heapStart;
     uint64_t c = 0;
 
+    logging::log(logging::INFO, "<Heap start: %x, Heap end: %x>", heapStart, heapEnd);
+
     while (hdr)
     {
       logging::log(logging::INFOPlus, "[ %d ] Block Addr: %x, Data size: %S, Free: %s, Next block addr: %x", c, hdr, hdr->length, hdr->free ? "True" : "False", hdr->next);
@@ -200,9 +202,28 @@ namespace memory
     return mem;
   }
 
+  void *realloc(void *addr, size_t size)
+  {
+    if (addr == NULL || size == 0) return NULL;
+    if ((uint64_t)addr < (uint64_t)heapStart || (uint64_t)addr > (uint64_t)heapEnd) return NULL;
+
+    HeapSegHdr *segment = (HeapSegHdr *)addr - 1;
+    if (segment->free) return NULL;
+
+    void *tmpMem = calloc(size);
+    if (tmpMem == NULL) return NULL;
+
+    size_t sizeToCopy = size > segment->length ? size : segment->length;
+    memcpy(tmpMem, addr, sizeToCopy);
+    free(addr);
+
+    return tmpMem;
+  }
+
   void free(void *address)
   {
     if (address == NULL) return;
+    if ((uint64_t)address < (uint64_t)heapStart || (uint64_t)address > (uint64_t)heapEnd) return;
 
     HeapSegHdr *segment = (HeapSegHdr *)address - 1;
     segment->free = true;

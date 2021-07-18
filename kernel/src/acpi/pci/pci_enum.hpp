@@ -24,8 +24,7 @@ namespace PCI
     DC_SignalProcessingController = 0x11,
     DC_ProcessingAccelerator = 0x12,
     DC_NonEssentialInstrumentation = 0x13,
-    DC_CoProcessor = 0x40,
-    DC_VendorSpecific = 0xFF
+    DC_CoProcessor = 0x40
   };
 
   enum UnclassifiedSubclass
