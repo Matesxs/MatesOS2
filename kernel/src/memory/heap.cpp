@@ -16,26 +16,18 @@ namespace memory
 
   HeapSegHdr *LastHdr = NULL;
   uint64_t usedPages = 0;
-  size_t start_page_count = 0;
 
   void CreateHeap(void *heapAddress, size_t pageCount)
   {
     if (heapStart != NULL) Panic("Heap already initialized");
 
-    void *pos = heapAddress;
+    void *firstPage = ReqestPages(pageCount);
+    if (firstPage == NULL) Panic("Cant request heap pages");
 
-    for (size_t i = 0; i < pageCount; i++)
-    {
-      void *temp = RequestPage();
-      if (temp == NULL) Panic("Cant request heap page");
+    MemoryMap(heapAddress, firstPage, pageCount);
 
-      MemoryMap(pos, temp);
-
-      pos = (void *)((size_t)pos + PAGE_SIZE);
-      usedPages++;
-    }
-
-    size_t heapLength = pageCount * PAGE_SIZE;
+    usedPages = pageCount;
+    size_t heapLength = usedPages * PAGE_SIZE;
 
     heapStart = heapAddress;
     heapEnd = (void *)((size_t)heapStart + heapLength);
@@ -47,7 +39,6 @@ namespace memory
     startSeg->free = true;
 
     LastHdr = startSeg;
-    start_page_count = pageCount;
   }
 
   void WalkHeap()
